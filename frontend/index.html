@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- Homemade css -->
+    <link rel="stylesheet" href="./css/ripples.css">
+    <link rel="stylesheet" href="./css/style.css">
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./js/interface.js"></script>
+</head>
+
+<body>
+ 
+    <div id="navbar" class=" d-flex flex-wrap py-3 md-3 justify-content-center">
+        <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <svg class="bi me-2" width="40" height="32">
+                <use xlink:href="#bootstrap"></use>
+            </svg>
+            <span class="fs-4">
+                <i class="fa fa-tree" style="font-size:25px;"></i>
+                新树洞
+            </span>
+        </a>
+
+        <ul class="nav nav-pills" id="refresh">
+            <li class="nav-item">
+                <!-- How to refresh? -->
+                <a href="#" class="nav-link link-body-emphasis" onclick="show_post_list(true)">
+                    刷新
+                    <i class="fa fa-refresh"></i>
+                </a>
+
+            </li>
+        </ul>
+
+        <form>
+            <div class="input-group">
+                <input id="searchInput" type="text" class="form-control" placeholder="Search..." aria-label="Search">
+                <button id="CreatePostButton" type="submit" class="btn btn-outline-secondary"
+                    onclick="show_search_post_list(true)">
+                    检索
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a href="#" class="nav-link link-body-emphasis" onclick="show_star_post_list()">
+                    收藏
+                    <i class="fa fa-star"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link link-body-emphasis" onclick="show_my_post_list()">
+                    我的
+                    <i class="fa fa-user"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link link-body-emphasis" onclick="show_newpost_sidebar()">
+                    发布
+                    <i class="fa fa-plus"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link link-body-emphasis" onclick="logout()">
+                    注销
+                    <i class="fa fa-power-off"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div id="sidebar_newpost" class="sidebar">
+
+        <div class='sidebar-title'>
+            <span class="fs-4"><i class="fa fa-pencil"></i> 发布树洞 </span>
+            <button class="exit-node-button" onclick="hide_newpost_sidebar()">
+                <span class="fs-4">
+                    <i class="fa fa-times-circle-o left-sidebar-node" style="font-size:30px"></i>
+                </span>
+            </button>
+        </div>
+
+        <div class='sidebar-mainbody'>
+            <form>
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="fa fa-envelope"></i> 树洞内容
+                    </label>
+                    <textarea class="form-control" id="PostContentArea" rows="5" placeholder="在此倾诉你的心声">
+                    </textarea>
+                </div>
+                <div id="button_area">
+                    <!-- 将这个按钮变成白底黑字 -->
+                    <button id="CreatePostButton" type="submit" class="btn btn-outline-secondary"
+                        onclick="create_new_post()">
+                        <i class="fa fa-paper-plane"></i> 确认发布
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="post-detail" class="sidebar">
+        <div class='sidebar-title'>
+            <span class="fs-4"><i class="fa fa-comments"></i>树洞</span>
+            <button class="exit-node-button" onclick="hide_post_detail()">
+                <span class="fs-4">
+                    <i class="fa fa-times-circle-o left-sidebar-node" style="font-size:30px"></i>
+                </span>
+            </button>
+        </div>
+        <div>
+            <ul class="CardArea" id="postdetaillist">
+                <li class="card">
+                    <div class="card-body">
+                        <p class="post-info">post._id&nbsp;post.publish_time</p>
+                        <h5 class="card-text">post.content</h5>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-text">comment.content</h5>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-text">comment.content</h5>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-text">comment.content</h5>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-text">comment.content</h5>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-text">comment.content</h5>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-text">comment.content</h5>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-text">comment.content</h5>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-text">comment.content</h5>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-text">comment.content</h5>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-text">comment.content</h5>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-text">comment.content</h5>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-text">comment.content</h5>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-text">comment.content</h5>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="sidebar-post-area ">
+            <form>
+                <div class='sidebar-mainbody' id='sidebar-mainbody-post'>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="fa fa-envelope"></i> 评论内容
+                        </label>
+                        <textarea class="form-control" id="CommentContentArea" rows="2" placeholder="在此随附你的见解">
+                        </textarea>
+                    </div>
+                    <div id="button_area">
+                        <button id="CreatePostButton" class="btn btn-outline-secondary" onclick="create_new_comment()">
+                            <i class="fa fa-paper-plane"></i> 确认发布
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="mainbody">
+        <!-- 帖子 -->
+        <div class="row post-container" onclick="show_post_detail(null)">
+            <div class="card mb-3 post-card card-body">
+                <div class="card-body-title">
+                    <p class="post-info">post._id&nbsp;post.publish_time </p>
+                    <i class="fa fa-star collectButton" onclick=""></i>
+                    <!-- TODO -->
+                    <!-- 该图标 <i class="fa fa-star-o collectButton" ></i> 点击toggle成另一图标<i class="fa fa-star"></i></button>-->
+                </div>
+                <h5 class="card-text">样例</h5>
+            </div>
+            <div class="card mb-3 post-card card-body comment-card">
+                <h5 class="card-text">comment.content</h5>
+            </div>
+            <div class="card mb-3 post-card card-body">
+                <h5 class="card-text">comment.content</h5>
+            </div>
+        </div>
+
+        <div class="row post-container" onclick="show_post_detail(null)">
+            <div class="card mb-3 post-card card-body ">
+                <div class="card-body-title">
+                    <p class="post-info">post._id&nbsp;post.publish_time </p>
+                    <i class="fa fa-star collectButton" onclick=""></i>
+                    <!-- TODO -->
+                    <!-- 该图标 <i class="fa fa-star-o collectButton" ></i> 点击toggle成另一图标<i class="fa fa-star"></i></button>-->
+                </div>
+                <h5 class="card-text">post.content</h5>
+            </div>
+            <div class="card mb-3 post-card card-body comment-card">
+                <h5 class="card-text">comment.content</h5>
+            </div>
+            <div class="card mb-3 post-card card-body">
+                <h5 class="card-text">comment.content</h5>
+            </div>
+            <div class="card mb-3 post-card card-body">
+                <h5 class="card-text">comment.content</h5>
+            </div>
+            <div class="card mb-3 post-card card-body">
+                <h5 class="card-text">comment.content</h5>
+            </div>
+            <div class="card mb-3 post-card card-body">
+                <h5 class="card-text">comment.content</h5>
+            </div>
+            <div class="card mb-3 post-card card-body">
+                <h5 class="card-text">comment.content</h5>
+            </div>
+            <div class="card mb-3 post-card card-body">
+                <h5 class="card-text">comment.content</h5>
+            </div>
+            <div class="card mb-3 post-card card-body">
+                <h5 class="card-text">comment.content</h5>
+            </div>
+        </div>
+
+    </div>
+    <div id="spanBox"></div>
+    <script src="./js/ripples.js"></script>
+    <script src="./js/main.js"></script>
+    <!-- <script src="./js/interface.js"></script> -->
+
+</body>
+
+</html>

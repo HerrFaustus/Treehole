@@ -1,0 +1,313 @@
+
+.post {
+  margin-left: 20px;
+  margin-bottom: 20px;
+  opacity: 0.8;
+  color: black;
+  display: flex;
+  overflow: hidden;
+}
+
+.base-card {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: saturate(180%) blur(20px);
+  padding: 10px;
+  width: 500px;
+  flex-shrink: 0;
+}
+
+.overlay-card {
+  margin-left: -10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: saturate(180%) blur(20px);
+  padding: 10px;
+  width: 300px;
+  align-self: flex-start;
+  flex-shrink: 0;
+}
+
+body {
+  background-image: url("../img/background.jpg");
+  background:no repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  z-index:-1;
+  /* 背景图片固定不可左右拖出边界 */
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* 向下overflow时显示额外图片 */
+}
+
+/* 定义滚动条样式 */
+::-webkit-scrollbar {
+    width: 0px;									
+} 
+
+.scrollable-content {
+  height: 200px;
+  overflow-y: auto;
+}
+
+.floor {
+  text-align: center;
+  line-height: 100%;
+}
+
+#navbar{
+  /* all across the border horizontally */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  background-color: rgba(255,255,255,1);
+  backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2); 
+  /* align items in the center vertically */
+  display: flex;
+  align-items: center;
+  /* space between each item */
+  justify-content: space-between;
+  padding: 0 20px;
+  /* 与下一个元素间隔 */
+  margin-bottom: 20px;
+  z-index: 1;
+}
+
+#refresh{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#mainbody{
+
+  margin-top: 120px;
+  margin-bottom: 20px;
+  /* 两侧适当间隔 */
+  margin-left: 50px;
+  margin-right: 50px;
+
+  border-radius: 10px;
+}
+
+/*侧边栏*/
+.sidebar {
+  position: fixed;
+  top: 0;
+  right:-50%;
+  /* 将侧栏定位到页面的右侧并隐藏 */
+  width: 50%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  z-index: 2;
+  /* 将侧栏置于页面的顶层 */
+  transition: right 0.3s ease-out;
+  /* 添加过渡效果 */
+  /* 毛玻璃质感 */
+  backdrop-filter: saturate(180%) blur(20px);
+  overflow-y: scroll;
+  /* 滚动条 beautiful */
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+
+}
+
+.show-sidebar {
+  right: 0;
+  /* 显示侧栏时，将右侧距离设为0 */
+}
+
+button {
+  margin-right: 10px;
+  border: none;
+}
+
+/*展示帖子*/
+.post-info {
+  font-size: small;
+  color: #999;
+}
+
+.post-container {
+  display: flex;
+  flex-wrap: nowrap;
+  /* 禁止换行 */
+  overflow-x: auto;
+  /* 横向滚动条 */
+}
+.post-container::-webkit-scrollbar {
+  display: none;
+}
+
+.post-card {
+  flex-shrink: 0;
+  /* 防止缩小 */
+  min-width: 33%;
+  max-width: 33%;
+  /* margin-right: 10px; */
+}
+
+/*展示帖子*/
+.post-info {
+  font-size: small;
+  color: #999;
+}
+
+/*发布侧边栏*/
+.sidebar-title{
+  background-color: rgba(255, 255, 255, 1);
+  /* 下边界延长，只在下边界加一道阴影 */
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2); 
+  padding: 17px;
+  margin-bottom: 17px;
+  vertical-align: middle;
+  /* 不随滚动而移动 */
+  position: sticky;
+  top: 0;
+  border-radius: 10px;
+  z-index: 999;
+}
+
+.sidebar-mainbody{
+
+  /* in the middle of its father element */
+
+  /* 两侧适当间隔 */
+
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: saturate(180%) blur(20px);
+
+  padding: 17px;
+  margin-bottom: 17px;
+  margin-left: 17px;
+  margin-right: 17px;
+  /* 与sidebar-title的阴影相重叠 */
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2); 
+
+  /* 边缘圆滑 */
+  border-radius: 10px;
+  
+}
+
+#sidebar-mainbody-post{
+  /* 固定在元素最下方，固定显示，不滚动 */
+  position: sticky;
+  left: 0;
+  right: 0; 
+
+  /* 下边界延长，只在下边界加一道阴影 */
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2); 
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-radius: 10px;
+  z-index: 999;
+}
+
+.sidebar-post-area{
+  position: sticky;
+  bottom: 0;
+  
+}
+
+#button_area{
+  text-align: center;
+}
+
+.exit-node-button{
+  /* 该按钮靠右，与左侧文字垂直对齐*/
+  float: right;
+  vertical-align: middle;
+  border: none;
+  background-color: rgba(255, 255, 255, 0);
+  /* 下边界延长，只在下边界加一道阴影 */
+}
+  
+#CreatePostButton{
+  /* 按钮内字体调制黑色 */
+  color: black;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: saturate(180%) blur(20px);
+  /* when hover... */
+  transition: 0.3;
+}
+
+#CreatePostButton:hover{
+  color: rgba(255, 255, 255);
+  background-color: black;
+  transition: 0.3;
+}
+
+#PostContentArea{
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: saturate(180%) blur(20px);
+
+  /* vertical distance from its father element border */
+
+  border-radius: 10px;
+}
+
+#commentContentArea{
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: saturate(180%) blur(20px);
+
+  /* vertical distance from its father element border */
+
+  border-radius: 10px;
+}
+
+.CardArea{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.card{
+  /* 垂直布置，上下间隔 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* 左右边界圆滑 */
+  border-radius: 10px;
+  /* 两侧适当间隔 */
+  /* 与下一个元素间隔 */
+  margin-bottom: 10px;
+  /* 与上一个元素间隔 */
+  margin-top: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  /* 最小高度 */
+  min-height: 50px;
+  /* 横向滚动条 */
+  overflow-x: auto;
+  /* 滚动条不可见 */
+  scrollbar-width: none;
+  background-color: rgba(255, 255, 255, 1);
+  /* 下边界延长，只在下边界加一道阴影 */
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2);
+  /* text 竖直居中 */
+  /* text 水平居中 */
+  justify-content: center; 
+  vertical-align: middle;
+}
+
+.card-body-title{
+  /* 内部元素水平对齐 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.collectButton{
+  /* 顶格右上方 */
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0);
+}
+

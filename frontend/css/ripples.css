@@ -1,0 +1,22 @@
+#spanBox span {
+    position: fixed;
+    border: 2px solid #fff;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    border-radius: 50%;
+    filter: brightness(2);
+    animation: animate 2s linear infinite;
+    z-index: 2;
+}
+
+@keyframes animate {
+    0% {
+        width: 0;
+        height: 0;
+    }
+
+    100% {
+        width: 350px;
+        height: 350px;
+    }
+}

@@ -1,0 +1,17 @@
+.el-drawer {
+    background-image: linear-gradient(to bottom right, rgba(30, 33, 39, .7), rgba(79, 87, 103, .7));
+    opacity: 90% !important;
+    -webkit-backdrop-filter: blur(30px);
+    backdrop-filter: blur(30px);
+}
+
+div.post {
+    align-items: center;
+}
+
+div.postWords {
+    opacity: 90% !important;
+}
+input.el_input_inner {
+    width: 30%;
+}

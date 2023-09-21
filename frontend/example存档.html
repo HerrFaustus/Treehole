@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Vue SPA</title>
+
+    <!-- Vue & CDN for Bootstrap -->
+    <script src="https://unpkg.com/vue@3.2.30/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- CDN for font-awesome icons -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+
+    <!-- Homemade css -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/login.css" />
+
+    <style>
+        .sidebar {
+        position: fixed;
+        top: 0;
+        right: -50%; /* 将侧栏定位到页面的右侧并隐藏 */
+        width: 50%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.1);
+        z-index: 100; /* 将侧栏置于页面的顶层 */
+        transition: right 0.3s ease-out; /* 添加过渡效果 */
+        /* 毛玻璃质感 */
+        backdrop-filter: saturate(180%) blur(20px);
+        }
+
+        .show-sidebar {
+            right: 0;
+            /* 显示侧栏时，将右侧距离设为0 */
+        }
+
+        button {
+            margin-right: 10px;
+
+        }
+
+        .show-sidebar {
+            right: 0;
+            /* 显示侧栏时，将右侧距离设为0 */
+        }
+
+        button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+
+        <!-- registration form -->
+        <div v-if="!loggedIn">
+            <div class="toLogIn" v-if="showRegistrationForm">
+                <h2 class="logHeader">注&nbsp;&nbsp;册</h2>
+                <form @submit.prevent="registerUser">
+                    <div class="mb-3 typeInContainer">
+                        <input type="text" class="form-control typeInInput" id="username" placeholder="Enter username"
+                               v-model="username">
+                        <span class="left"></span>
+                        <span class="right"></span>
+                        <span class="top"></span>
+                        <span class="bottom"></span>
+                    </div>
+                    <div class="mb-3 typeInContainer2">
+                        <input type="password" class="form-control typeInInput" id="password" placeholder="Enter password"
+                               v-model="password">
+                        <span class="left"></span>
+                        <span class="right"></span>
+                        <span class="top"></span>
+                        <span class="bottom"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary primaInButton">Register</button>
+                    <hr>
+                    <p class="alterInNote">Already have an account? </p>
+                    <a class="alterInButton" href="#" @click="showRegistrationForm = false, loggedIn = true">Forced Log in (temporary)</a>
+                </form>
+            </div>
+            <div class="toLogIn" v-else>
+                <h2 class="logHeader">登&nbsp;&nbsp;录</h2>
+                <form @submit.prevent="loginUser">
+                    <div class="mb-3 typeInContainer">
+                        <input type="text" class="form-control typeInInput" id="username" placeholder="Enter username"
+                               v-model="username">
+                        <span class="left"></span>
+                        <span class="right"></span>
+                        <span class="top"></span>
+                        <span class="bottom"></span>
+                    </div>
+                    <div class="mb-3 typeInContainer2">
+                        <input type="password" class="form-control typeInInput" id="password" placeholder="Enter password"
+                               v-model="password">
+                        <span class="left"></span>
+                        <span class="right"></span>
+                        <span class="top"></span>
+                        <span class="bottom"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary primaInButton">Login</button>
+                    <hr>
+                    <p class="alterInNote">Don't have an account yet? </p>
+                    <a class="alterInButton" href="#" @click="showRegistrationForm = true">Register</a>
+                </form>
+            </div>
+        </div>
+
+        <!-- 顶部导航栏 -->
+        <div id = "navbar" class=" d-flex flex-wrap py-3 md-3 justify-content-center" v-if="loggedIn">
+            
+            <a href="" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+                <span class="fs-4"><i class="fa fa-tree" style="font-size:25px;"></i> 新树洞 </span>
+            </a>
+
+            <form role="search">
+                <div class="input-group">
+                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">检索 <i class="fa fa-search"></i></button>
+                </div>
+            </form>
+
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="#" class="nav-link link-body-emphasis" @click="showUserFavorites = true">收藏 <i class="fa fa-star"></i></a></li>
+                <li class="nav-item"><a href="#" class="nav-link link-body-emphasis" @click="showUserPosts = true">我的 <i class="fa fa-user"></i></a></li>
+                <li class="nav-item"><a href="#" class="nav-link link-body-emphasis" @click="showNewPostForm = true">发布 <i class="fa fa-plus"></i></a></li>
+                <li class="nav-item"><a href="#" class="nav-link link-body-emphasis" onclick="location.reload();">注销 <i class="fa fa-power-off"></i></a></li>
+            </ul>
+
+        </div>
+
+        <!-- main body -->
+        <div id="mainbody">
+
+            <!-- post list -->
+            <div v-if="loggedIn">
+                <!-- 这个可以改成右边抽屉形式 -->
+
+                <!-- new post form -->
+                <div id = "sidebar_newpost" class="sidebar" :class="{ 'show-sidebar': showNewPostForm }">
+                    
+                    <div class = 'sidebar-title'>
+                        <span class="fs-4"><i class="fa fa-pencil"></i> 发布树洞 </span>
+                        <button class = "exit-node-button" @click="showNewPostForm = false"><span class="fs-4"><i class="fa fa-times-circle-o left-sidebar-node" style="font-size:30px"></i></span></button>
+                    </div>
+                    
+                    <div class = 'sidebar-mainbody'>
+                        <form @submit.prevent="createPost">
+                            <!-- <div class="mb-3">
+                                <label for="postTitle" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="postTitle" placeholder="Enter title"
+                                    v-model="newPost.title">
+                            </div> -->
+                            <div class= "mb-3">
+                                <label for="postContent" class="form-label"><i class="fa fa-envelope"></i> 树洞内容</label>
+                                <textarea class="form-control" id="PostContentArea" rows="5" placeholder= "在此倾诉你的心声"
+                                    v-model="newPost.content"></textarea>
+                            </div>
+                            <div id="button_area">
+                                <!-- 将这个按钮变成白底黑字 -->
+                                <button id = "CreatePostButton" type="submit" class="btn btn-outline-secondary"><i class="fa fa-paper-plane"></i> 确认发布 </button>          
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 需要改成card排列！ -->
+                <div v-if="posts.length > 0">
+                    <div class="row post-row post-container" v-for="(post, index) in posts" :key="post._id"
+                        @click="viewPostDetails(post._id)">
+
+                        <div class="card mb-3 post-card">
+                            <div class="card-body">
+                                <p class="post-info">#{{post._id}}&nbsp;{{post.publish_time}}</p>
+                                <h5 class="card-text">{{ post.content }}</h5>
+                            </div>
+                        </div>
+
+                        <div class="card mb-3 post-card" v-for="(comment,index) in post.comments" :key="index">
+                            <div class="card-body">{{ comment.content}}</div>
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+
+            <!-- empty post list -->
+            <div v-else>
+                <p>No posts to display.</p>
+            </div>
+
+            <!-- post details -->
+            <div id="post-detail" class="sidebar" :class="{ 'show-sidebar': showPostDetails }">
+                <div v-if="selectedPost">
+
+                    <!-- post content -->
+                    <h2>Post Details</h2>
+                    <!-- <p><strong>Title:</strong> {{ selectedPost.title }}</p> -->
+                    <p><strong>Content:</strong> {{ selectedPost.content }}</p>
+                    <hr>
+
+                    <!-- comments section -->
+                    <h3>Comments</h3>
+                    <div v-if="selectedPost.comments.length > 0">
+                        <ul>
+                            <li v-for="(comment,index) in selectedPost.comments" :key="index">{{ comment.content }}</li>
+                        </ul>
+                    </div>
+                    <div v-else>
+                        <p>No comments to display.</p>
+                    </div>
+
+                    <!-- add comment form -->
+                    <p><button type="button" class="btn btn-success" @click="showCommentForm = true">Add
+                        Comment</button>
+                    <button type="button" class="btn btn-secondary" @click="showPostDetails = false">Cancel</button>
+                </p>
+                <div v-if="showCommentForm">
+                    <form @submit.prevent="addComment(selectedPost._id)">
+                        <div class="mb-3">
+                            <label for="commentContent" class="form-label">Content</label>
+                            <textarea class="form-control" id="commentContent" rows="5" placeholder="Enter content"
+                                v-model="newComment.content"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary" @click="showCommentForm = false">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+            <!-- user posts -->
+            <div v-if="showUserPosts">
+                <h2>User Posts</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Content Summary</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(post, index) in userPosts" :key="post._id">
+                            <th scope="row">{{ index + 1 }}</th>
+                            <td>{{ post.title }}</td>
+                            <td>{{ post.content.substring(0, 50) }}...</td>
+                            <td>
+                                <button type="button" class="btn btn-primary" @click="viewPostDetails(post._id)">View
+                                    Details</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- empty user posts -->
+            <div v-if="showUserPosts && !loadingUserPosts && userPosts.length === 0">
+                <p>No posts to display.</p>
+            </div>
+
+        <!-- user favorites -->
+        <div v-if="showUserFavorites">
+            <h2>User Favorites</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Content Summary</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(post, index) in userFavorites" :key="post._id">
+                        <th scope="row">{{ index + 1 }}</th>
+                        <td>{{ post.title }}</td>
+                        <td>{{ post.content.substring(0, 50) }}...</td>
+                        <td>
+                            <button type="button" class="btn btn-danger"
+                                @click="unfavoritePost(post._id)">Unfavorite</button>
+                            <button type="button" class="btn btn-primary" @click="viewPostDetails(post._id)">View
+                                Details</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+            <!-- empty user favorites -->
+            <div v-if="showUserFavorites && !loadingUserFavorites && userFavorites.length === 0">
+                <p>No favorites to display.</p>
+            </div>
+        </div>
+        </div>
+
+        <script>
+            axios.defaults.withCredentials = true;
+            const BASE_URL = "https://weiy-me-bug-free-space-telegram-vrjw7g557r5hxjv7-5055.preview.app.github.dev"
+            const app = Vue.createApp({
+                data() {
+                    return {
+                        loggedIn: false,
+                        showRegistrationForm: true,
+                        showNewPostForm: false,
+                        newPost: { title: '', content: null },
+                        showCommentForm: false,
+                        newComment: { title: null },
+                        loading: true,
+                        query: '',
+                        lastID: 999999999999,
+                        loadingUserPosts: true,
+                        loadingUserFavorites: true,
+                        username: "",
+                        password: "",
+                        posts: [],
+                        selectedPost: null,
+                        showPostDetails: false,
+                        userPosts: [],
+                        showUserPosts: false,
+                        userFavorites: [],
+                        showUserFavorites: false
+                    }
+                },
+                created() {
+                    try {
+                        this.getPosts()
+                    } catch (error) {
+    
+                    }
+                },
+    
+                mounted() {
+                    window.addEventListener('scroll', this.handleScroll)
+                },
+    
+                beforeDestroy() {
+                    window.removeEventListener('scroll', this.handleScroll)
+                },
+    
+                methods: {
+                    // Registration form submission
+                    registerUser() {
+                        axios.post(`${BASE_URL}/api/register`, {
+                            username: this.username,
+                            password: this.password
+                        })
+                            .then(response => {
+                                alert(response.data.message)
+                            })
+                            .catch(error => {
+                                alert("Registration failed.")
+                                console.log(error)
+                            })
+                            .finally(() => {
+                                this.username = ""
+                                this.password = ""
+                            })
+                    },
+                    // Login form submission
+                    loginUser() {
+                        axios.post(`${BASE_URL}/api/login`, {
+                            username: this.username,
+                            password: this.password
+                        })
+                            .then(response => {
+                                this.loggedIn = true
+                            })
+                            .catch(error => {
+                                alert("Login failed.")
+                                console.log(error)
+                            })
+                            .finally(() => {
+                                this.username = ""
+                                this.password = ""
+                                this.getUserPosts()
+                                this.getUserFavorites()
+                            })
+                    },
+    
+                    // Fetch all posts
+                    getPosts(reload = true) {
+                        // this.query
+                        if(reload){
+                            this.lastID = 9999999
+                        }
+                        axios.get(`${BASE_URL}/api/posts`, { params: { query: this.query,last_id:this.lastID } })
+                            .then(response => {
+                                if (reload) {
+                                    this.posts = response.data.data.posts
+                                } else {
+                                    // this.posts.append(response.data.data.posts)
+                                    this.posts.push(...response.data.data.posts);
+    
+                                }
+                                this.lastID = response.data.data.posts[response.data.data.posts.length - 1]._id;
+                                console.log(this.lastID)
+                                this.loggedIn = true
+                            })
+                            .catch(error => console.log(error))
+                            .finally(() => {
+                                this.loading = false
+                            })
+                    },
+    
+                    handleScroll() {
+                        const scrollHeight = document.documentElement.scrollHeight
+                        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+                        const clientHeight = document.documentElement.clientHeight
+    
+                        if (scrollTop + clientHeight >= scrollHeight && !this.loading) {
+                            this.loading = true
+                            this.getPosts(reload=false)
+                        }
+                    },
+                    // add a new post
+                    createPost() {
+                        axios.post(`${BASE_URL}/api/posts`, { title: this.newPost.title, content: this.newPost.content }, { withCredentials: true })
+                            .then(response => {
+                                alert("Post created!")
+                                this.getPosts()
+                                this.showNewPostForm = false
+                            })
+                            .catch(error => {
+                                alert("Error creating post.")
+                                console.log(error)
+                            })
+                    },
+    
+                    // Fetch post details and display it
+                    viewPostDetails(postId) {
+                        axios.get(`${BASE_URL}/api/posts/${postId}`)
+                            .then(response => {
+                                this.selectedPost = response.data.data
+                                this.showPostDetails = true
+                            })
+                            .catch(error => console.log(error))
+                    },
+    
+                    // add a new comment to selected post
+                    addComment(postId) {
+                        axios.post(`${BASE_URL}/api/posts/${postId}/comments`, { content: this.newComment.content }, { withCredentials: true })
+                            .then(response => {
+                                alert("Comment added!")
+                                this.viewPostDetails(postId)
+                                this.showCommentForm = false
+                            })
+                            .catch(error => {
+                                alert("Error adding comment.")
+                                console.error(error)
+                            })
+                    },
+    
+    
+                    // Fetch user posts
+                    getUserPosts() {
+                        axios.get(`${BASE_URL}/api/user/posts`, {
+                            withCredentials: true
+                        })
+                            .then(response => {
+                                this.userPosts = response.data.data
+                            })
+                            .catch(error => console.log(error))
+                            .finally(() => {
+                                this.loadingUserPosts = false
+                            })
+                    },
+    
+                    // Fetch user favorites
+                    getUserFavorites() {
+                        axios.get(`${BASE_URL}/api/user/favorites`, {
+                            withCredentials: true
+                        })
+                            .then(response => {
+                                this.userFavorites = response.data.data
+                            })
+                            .catch(error => console.log(error))
+                            .finally(() => {
+                                this.loadingUserFavorites = false
+                            })
+                    },
+    
+                    // Favorite a post
+                    favoritePost(postId) {
+                        axios.post(`${BASE_URL}/api/posts/${postId}/favorite`, {}, {
+                            withCredentials: true
+                        })
+                            .then(response => {
+                                alert("Post favorited!")
+                                this.getUserFavorites()
+                            })
+                            .catch(error => {
+                                alert("Error favoriting post.")
+                                console.log(error)
+                            })
+                    },
+    
+                    // Unfavorite a post
+                    unfavoritePost(postId) {
+                        axios.delete(`${BASE_URL}/api/posts/${postId}/favorite`, {
+                            withCredentials: true
+                        })
+                            .then(response => {
+                                alert("Post unfavorited!")
+                                this.getUserFavorites()
+                            })
+                            .catch(error => {
+                                alert("Error unfavoriting post.")
+                                console.log(error)
+                            })
+                    }
+                }
+            })
+    
+            app.mount('#app')
+        </script>
+</body>
+
+</html>
